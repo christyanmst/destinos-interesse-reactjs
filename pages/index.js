@@ -10,15 +10,14 @@ export default function Home() {
 
   useEffect(() => {
     getCountries()
-      .then((res) => setCountriesList(res.data))
+      .then((res) => setCountriesList(res.data.map(e => e.name_ptbr)))
       .catch((err) => console.log(err));
     getCities()
-      .then((res) => setCitiesList(res.data))
+      .then((res) => setCitiesList(res.data.map(e => e.name_ptbr)))
       .catch((err) => console.log(err));
   }, []);
 
-  // console.log(citiesList);
-
+console.log
   const handleSubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -41,18 +40,18 @@ export default function Home() {
         <label>Países</label>
         <select name="country">
           <option value="">Selecione...</option>
-          {countriesList.map((res) => (
-            <option key={res.id} value={res.id}>
-              {res.name_ptbr}
+          {countriesList.map((res, index) => (
+            <option key={index} value={res}>
+              {res}
             </option>
           ))}
         </select>
         <label>Cidades</label>
         <select name="city">
           <option value="">Selecione...</option>
-          {citiesList.map((res) => (
-            <option key={res.id} value={res.id}>
-              {res.name_ptbr}
+          {citiesList.map((res, index) => (
+            <option key={index} value={res}>
+              {res}
             </option>
           ))}
         </select>
