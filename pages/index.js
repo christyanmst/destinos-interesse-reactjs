@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { getCities, getCountries } from "./api/config";
+import { maskCPF, maskPhone } from "./masks";
 
 export default function Home() {
   const [citiesList, setCitiesList] = useState([]);
   const [countriesList, setCountriesList] = useState([]);
+  const [cpf, setCPF] = useState("");
+  const [phone, setPhone] = useState("");
 
   useEffect(() => {
     getCountries()
@@ -14,7 +17,7 @@ export default function Home() {
       .catch((err) => console.log(err));
   }, []);
 
-  console.log(citiesList);
+  // console.log(citiesList);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -22,10 +25,6 @@ export default function Home() {
     const data = Object.fromEntries(formData);
 
     console.log(data);
-  };
-
-  const handleInputChange = (e) => {
-    e.target.value;
   };
 
   return (
@@ -36,9 +35,9 @@ export default function Home() {
         <label>Email</label>
         <input type="email" name="email" placeholder="seuemail@email.com" />
         <label>Telefone</label>
-        <input type="text" name="phone" placeholder="(00) 00000-0000" />
+        <input type="text" name="phone" value={phone} onChange={e => setPhone(maskPhone(e.target.value))} placeholder="(00) 00000-0000" />
         <label>CPF</label>
-        <input type="text" name="cpf" placeholder="000.000.000-00" />
+        <input type="text" name="cpf" value={cpf} onChange={e => setCPF(maskCPF(e.target.value))} placeholder="000.000.000-00" />
         <label>Países</label>
         <select name="country">
           <option value="">Selecione...</option>
