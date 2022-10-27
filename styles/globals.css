@@ -24,3 +24,19 @@ a {
     background: gray;
   }
 }
+
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: darkcyan;
+  min-height: 2rem;
+  max-height: 4rem;
+  width: 100%;
+}
+
+.form{
+  display: flex;
+  justify-content: center;
+  margin:0 auto;
+  padding: 3em;
+}
