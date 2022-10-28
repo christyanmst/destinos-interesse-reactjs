@@ -7,19 +7,24 @@ import { Form, Label, Input, Button, FormGroup, InputGroup } from "reactstrap";
 export default function Home() {
   const [citiesList, setCitiesList] = useState([]);
   const [countriesList, setCountriesList] = useState([]);
+
   const [cpf, setCPF] = useState("");
   const [phone, setPhone] = useState("");
+
   const [city, setCity] = useState();
   const [country, setCountry] = useState();
+
   const [countriesSelected, setCountrieSelected] = useState([]);
   const [citiesSelectd, setCitiesSelected] = useState([]);
 
+  const [citiesFromCountry, setCitiesFromCountry] = useState([]);
+
   useEffect(() => {
     getCountries()
-      .then((res) => setCountriesList(res.data.map((e) => e.name_ptbr)))
+      .then((res) => setCountriesList(res.data))
       .catch((err) => console.log(err));
     getCities()
-      .then((res) => setCitiesList(res.data.map((e) => e.name_ptbr)))
+      .then((res) => setCitiesList(res.data))
       .catch((err) => console.log(err));
   }, []);
 
@@ -113,13 +118,16 @@ export default function Home() {
                 className="mb-3"
                 id="country"
                 type="select"
-                
-                onChange={(e) => setCountry(e.target.value)}
+                onChange={(e) => {
+                  setCountry(e.target.value);
+                  console.log(citiesList.filter(c=> c.country_code == e.target.value ))
+                  setCitiesFromCountry(citiesList.filter(c=> c.country_code == e.target.value ).map(c=> c.name_ptbr));
+                }}
               >
                 <option value="">Selecione...</option>
                 {countriesList.map((res, index) => (
-                  <option key={index} value={res}>
-                    {res}
+                  <option key={index} value={res.code}>
+                    {res.name_ptbr}
                   </option>
                 ))}
               </Input>
@@ -127,7 +135,7 @@ export default function Home() {
                 disabled={country ? false : true}
                 className="mb-3"
                 onClick={() => {
-                  addCountrySelected(document.querySelector("#country").value);
+                  addCountrySelected(countriesList.filter(e => e.code ==document.querySelector("#country").value).reduce((i, a) => a.name_ptbr, 0));
                 }}
               >
                 Adicionar
@@ -145,7 +153,7 @@ export default function Home() {
                 onChange={(e) => setCity(e.target.value)}
               >
                 <option value="">Selecione...</option>
-                {citiesList.map((res, index) => (
+                {citiesFromCountry.map((res, index) => (
                   <option key={index} value={res}>
                     {res}
                   </option>
