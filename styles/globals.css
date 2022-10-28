@@ -26,8 +26,6 @@ a {
 }
 
 .navbar {
-  display: flex;
-  justify-content: center;
   background-color: darkcyan;
   min-height: 2rem;
   max-height: 4rem;
@@ -38,5 +36,14 @@ a {
   display: flex;
   justify-content: center;
   margin:0 auto;
+  margin-top: 2rem;
   padding: 3em;
+  background-color: darkcyan;
+  min-width: 18rem;
+  max-width: 25rem;
+  border-radius: 1.5rem;
+}
+
+#button{
+  text-align: center;
 }

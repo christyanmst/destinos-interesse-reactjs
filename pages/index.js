@@ -1,12 +1,16 @@
+import React from "react";
 import { useState, useEffect } from "react";
 import { getCities, getCountries } from "./api/config";
 import { maskCPF, maskPhone } from "../components/Masks";
+import { Form, Label, Input, Button, FormGroup, InputGroup } from "reactstrap";
+import { useForm, FormProvider } from "react-hook-form";
 
 export default function Home() {
   const [citiesList, setCitiesList] = useState([]);
   const [countriesList, setCountriesList] = useState([]);
   const [cpf, setCPF] = useState("");
   const [phone, setPhone] = useState("");
+  const [citiesSelected, setCitiesSelected] = useState([]);
 
   useEffect(() => {
     getCountries()
@@ -17,79 +21,113 @@ export default function Home() {
       .catch((err) => console.log(err));
   }, []);
 
-  const handleSubmit = (e) => {
+  const handleSave = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
-
-    console.log(data);
+    data.citiesList = [];
+    data.countriesList = [];
+    // console.log(document.querySelector("#cpf").value);
   };
 
   return (
     <>
       <div className="form">
-        <form onSubmit={handleSubmit}>
-          <div>
-            <label>Nome</label>
-            <input type="text" name="name" placeholder="Nome" required />
-          </div>
-          <div>
-            <label>Email</label>
-            <input
-              type="email"
+        <Form onSubmit={handleSave}>
+          <FormGroup>
+            <Label form="name">Nome</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              id="name"
+              name="nome"
+              placeholder="Seu nome"
+              type="text"
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label form="email">Email</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              id="email"
               name="email"
               placeholder="seuemail@email.com"
+              type="email"
               required
             />
-          </div>
-          <div>
-            <label>Telefone</label>
-            <input
-              type="text"
+          </FormGroup>
+          <FormGroup>
+            <Label form="phone">Telefone</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              id="phone"
               name="phone"
               value={phone}
-              onChange={(e) => setPhone(maskPhone(e.target.value))}
               placeholder="(00) 00000-0000"
+              type="text"
+              maxLength={15}
+              onChange={(e) => setPhone(maskPhone(e.target.value))}
               required
             />
-          </div>
-          <div>
-            <label>
-              CPF
-              <input
-                type="text"
-                name="cpf"
-                value={cpf}
-                onChange={(e) => setCPF(maskCPF(e.target.value))}
-                placeholder="000.000.000-00"
-                required
-              />
-            </label>
-          </div>
-          <div>
-            <label>Países</label>
-            <select name="country" style={{ width: "150px" }} required>
+          </FormGroup>
+          <FormGroup>
+            <Label form="cpf">CPF</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              id="cpf"
+              name="cpf"
+              value={cpf}
+              placeholder="000.000.000-00"
+              type="text"
+              onChange={(e) => setCPF(maskCPF(e.target.value))}
+              required
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label form="country">País</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              id="country"
+              name="country"
+              type="select"
+              required
+            >
               <option value="">Selecione...</option>
               {countriesList.map((res, index) => (
                 <option key={index} value={res}>
                   {res}
                 </option>
               ))}
-            </select>
-          </div>
-          <div>
-            <label>Cidades</label>
-            <select name="city" style={{ width: "150px" }} required>
+            </Input>
+          </FormGroup>
+          <FormGroup>
+            <Label form="city">Cidade</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              id="city"
+              name="city"
+              type="select"
+              required
+            >
               <option value="">Selecione...</option>
               {citiesList.map((res, index) => (
                 <option key={index} value={res}>
                   {res}
                 </option>
               ))}
-            </select>
+            </Input>
+            {/* <Button onClick={() => set}>Adicionar</Button> */}
+          </FormGroup>
+          <div id="button">
+            <Button type="submit">SUBMIT</Button>
           </div>
-          <button type="submit">Enviar</button>
-        </form>
+        </Form>
       </div>
     </>
   );
