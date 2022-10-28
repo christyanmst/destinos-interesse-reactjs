@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { getCities, getCountries } from "./api/config";
 import { maskCPF, maskPhone } from "../components/Masks";
 import { Form, Label, Input, Button, FormGroup, InputGroup } from "reactstrap";
+import Country from "../components/Country";
+import { CountryOrCity } from "../components/CountryOrCity";
 
 export default function Home() {
   const [citiesList, setCitiesList] = useState([]);
@@ -61,6 +63,22 @@ export default function Home() {
     setCitiesSelected([...citiesSelectd]);
   }
 
+  function removeCountrySelected(data) {
+    countriesSelected.splice(
+      countriesSelected.indexOf(countriesSelected.find((c) => c === data)),
+      1
+    );
+    setCountrieSelected([...countriesSelected]);
+  }
+
+  function removeCitySelected(data) {
+    citiesSelectd.splice(
+      citiesSelectd.indexOf(citiesSelectd.find((c) => c === data)),
+      1
+    );
+    setCitiesSelected([...citiesSelectd]);
+  }
+
   return (
     <>
       <div className="form">
@@ -110,67 +128,8 @@ export default function Home() {
               required
             />
           </FormGroup>
-          <FormGroup>
-            <Label form="country">País</Label>
-            <InputGroup>
-              <Input
-                bsSize="sm"
-                className="mb-3"
-                id="country"
-                type="select"
-                onChange={(e) => {
-                  setCountry(e.target.value);
-                  console.log(citiesList.filter(c=> c.country_code == e.target.value ))
-                  setCitiesFromCountry(citiesList.filter(c=> c.country_code == e.target.value ).map(c=> c.name_ptbr));
-                }}
-              >
-                <option value="">Selecione...</option>
-                {countriesList.map((res, index) => (
-                  <option key={index} value={res.code}>
-                    {res.name_ptbr}
-                  </option>
-                ))}
-              </Input>
-              <Button
-                disabled={country ? false : true}
-                className="mb-3"
-                onClick={() => {
-                  addCountrySelected(countriesList.filter(e => e.code ==document.querySelector("#country").value).reduce((i, a) => a.name_ptbr, 0));
-                }}
-              >
-                Adicionar
-              </Button>
-            </InputGroup>
-          </FormGroup>
-          <FormGroup>
-            <Label form="city">Cidade</Label>
-            <InputGroup>
-              <Input
-                bsSize="sm"
-                className="mb-3"
-                id="city"
-                type="select"
-                onChange={(e) => setCity(e.target.value)}
-              >
-                <option value="">Selecione...</option>
-                {citiesFromCountry.map((res, index) => (
-                  <option key={index} value={res}>
-                    {res}
-                  </option>
-                ))}
-              </Input>
-              <Button
-                disabled={city ? false : true}
-                className="mb-3"
-                onClick={() => {
-                  addCitySelected(document.querySelector("#city").value);
-                }}
-              >
-                Adicionar
-              </Button>
-            </InputGroup>
-          </FormGroup>
-          <FormGroup>
+
+          {/* <FormGroup>
             <Label>Países selecionados</Label>
             <Input
               bsSize="sm"
@@ -191,11 +150,98 @@ export default function Home() {
               value={citiesSelectd}
               readOnly
             />
-          </FormGroup>
+          </FormGroup> */}
           <div id="button">
-            <Button 
-            disabled={countriesSelected.length > 0 && citiesSelectd.length > 0 ? false : true}
-            type="submit">Enviar</Button>
+            <Button
+              disabled={
+                countriesSelected.length > 0 && citiesSelectd.length > 0
+                  ? false
+                  : true
+              }
+              type="submit"
+            >
+              Enviar
+            </Button>
+          </div>
+          <div className="lists">
+            <FormGroup>
+              <Label form="country">País</Label>
+              <InputGroup>
+                <Input
+                  bsSize="sm"
+                  className="mb-3"
+                  id="country"
+                  type="select"
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setCitiesFromCountry(
+                      citiesList
+                        .filter((c) => c.country_code == e.target.value)
+                        .map((c) => c.name_ptbr)
+                    );
+                  }}
+                >
+                  <option value="">Selecione...</option>
+                  {countriesList.map((res, index) => (
+                    <option key={index} value={res.code}>
+                      {res.name_ptbr}
+                    </option>
+                  ))}
+                </Input>
+                <Button
+                  disabled={country ? false : true}
+                  className="mb-3"
+                  onClick={() => {
+                    addCountrySelected(
+                      countriesList
+                        .filter(
+                          (e) =>
+                            e.code == document.querySelector("#country").value
+                        )
+                        .reduce((i, a) => a.name_ptbr, 0)
+                    );
+                  }}
+                >
+                  Adicionar
+                </Button>
+              </InputGroup>
+              <CountryOrCity
+                List={countriesSelected}
+                removeSelected={removeCountrySelected}
+              />
+            </FormGroup>
+            <FormGroup>
+              <Label form="city">Cidade</Label>
+              <InputGroup>
+                <Input
+                  bsSize="sm"
+                  className="mb-3"
+                  id="city"
+                  type="select"
+                  onChange={(e) => setCity(e.target.value)}
+                >
+                  <option value="">Selecione...</option>
+                  {citiesFromCountry.map((res, index) => (
+                    <option key={index} value={res}>
+                      {res}
+                    </option>
+                  ))}
+                </Input>
+                <Button
+                  disabled={city ? false : true}
+                  className="mb-3"
+                  onClick={() => {
+                    addCitySelected(document.querySelector("#city").value);
+                  }}
+                >
+                  Adicionar
+                </Button>
+              </InputGroup>
+              <CountryOrCity
+                List={citiesSelectd}
+                removeSelected={removeCitySelected}
+              />
+            </FormGroup>
           </div>
         </Form>
       </div>
