@@ -1,4 +1,3 @@
-// 000.000.000-00
 export function maskCPF(CPF){
     return CPF
       .replace(/\D/g, "")
