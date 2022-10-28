@@ -3,14 +3,16 @@ import { useState, useEffect } from "react";
 import { getCities, getCountries } from "./api/config";
 import { maskCPF, maskPhone } from "../components/Masks";
 import { Form, Label, Input, Button, FormGroup, InputGroup } from "reactstrap";
-import { useForm, FormProvider } from "react-hook-form";
 
 export default function Home() {
   const [citiesList, setCitiesList] = useState([]);
   const [countriesList, setCountriesList] = useState([]);
   const [cpf, setCPF] = useState("");
   const [phone, setPhone] = useState("");
-  const [citiesSelected, setCitiesSelected] = useState([]);
+  const [city, setCity] = useState();
+  const [country, setCountry] = useState();
+  const [countriesSelected, setCountrieSelected] = useState([]);
+  const [citiesSelectd, setCitiesSelected] = useState([]);
 
   useEffect(() => {
     getCountries()
@@ -25,10 +27,34 @@ export default function Home() {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
-    data.citiesList = [];
-    data.countriesList = [];
-    // console.log(document.querySelector("#cpf").value);
+    console.log(data);
   };
+
+  function addCountrySelected(data) {
+    if (
+      countriesSelected.indexOf(countriesSelected.find((c) => c == data)) !== -1
+    ) {
+      alert(`O país ${data} já está na lista.`);
+      return;
+    } else if (countriesSelected.length >= 4) {
+      alert("Limite de países atingido.");
+      return;
+    }
+    countriesSelected.push(data);
+    setCountrieSelected([...countriesSelected]);
+  }
+
+  function addCitySelected(data) {
+    if (citiesSelectd.indexOf(citiesSelectd.find((c) => c == data)) !== -1) {
+      alert(`A cidade ${data} já está na lista.`);
+      return;
+    } else if (citiesSelectd.length >= 4) {
+      alert("Limite de cidades atingido.");
+      return;
+    }
+    citiesSelectd.push(data);
+    setCitiesSelected([...citiesSelectd]);
+  }
 
   return (
     <>
@@ -37,8 +63,6 @@ export default function Home() {
           <FormGroup>
             <Label form="name">Nome</Label>
             <Input
-              bsSize="sm"
-              className="mb-3"
               id="name"
               name="nome"
               placeholder="Seu nome"
@@ -49,8 +73,6 @@ export default function Home() {
           <FormGroup>
             <Label form="email">Email</Label>
             <Input
-              bsSize="sm"
-              className="mb-3"
               id="email"
               name="email"
               placeholder="seuemail@email.com"
@@ -61,8 +83,6 @@ export default function Home() {
           <FormGroup>
             <Label form="phone">Telefone</Label>
             <Input
-              bsSize="sm"
-              className="mb-3"
               id="phone"
               name="phone"
               value={phone}
@@ -76,8 +96,6 @@ export default function Home() {
           <FormGroup>
             <Label form="cpf">CPF</Label>
             <Input
-              bsSize="sm"
-              className="mb-3"
               id="cpf"
               name="cpf"
               value={cpf}
@@ -89,43 +107,87 @@ export default function Home() {
           </FormGroup>
           <FormGroup>
             <Label form="country">País</Label>
-            <Input
-              bsSize="sm"
-              className="mb-3"
-              id="country"
-              name="country"
-              type="select"
-              required
-            >
-              <option value="">Selecione...</option>
-              {countriesList.map((res, index) => (
-                <option key={index} value={res}>
-                  {res}
-                </option>
-              ))}
-            </Input>
+            <InputGroup>
+              <Input
+                bsSize="sm"
+                className="mb-3"
+                id="country"
+                type="select"
+                
+                onChange={(e) => setCountry(e.target.value)}
+              >
+                <option value="">Selecione...</option>
+                {countriesList.map((res, index) => (
+                  <option key={index} value={res}>
+                    {res}
+                  </option>
+                ))}
+              </Input>
+              <Button
+                disabled={country ? false : true}
+                className="mb-3"
+                onClick={() => {
+                  addCountrySelected(document.querySelector("#country").value);
+                }}
+              >
+                Adicionar
+              </Button>
+            </InputGroup>
           </FormGroup>
           <FormGroup>
             <Label form="city">Cidade</Label>
+            <InputGroup>
+              <Input
+                bsSize="sm"
+                className="mb-3"
+                id="city"
+                type="select"
+                onChange={(e) => setCity(e.target.value)}
+              >
+                <option value="">Selecione...</option>
+                {citiesList.map((res, index) => (
+                  <option key={index} value={res}>
+                    {res}
+                  </option>
+                ))}
+              </Input>
+              <Button
+                disabled={city ? false : true}
+                className="mb-3"
+                onClick={() => {
+                  addCitySelected(document.querySelector("#city").value);
+                }}
+              >
+                Adicionar
+              </Button>
+            </InputGroup>
+          </FormGroup>
+          <FormGroup>
+            <Label>Países selecionados</Label>
             <Input
               bsSize="sm"
               className="mb-3"
-              id="city"
-              name="city"
-              type="select"
-              required
-            >
-              <option value="">Selecione...</option>
-              {citiesList.map((res, index) => (
-                <option key={index} value={res}>
-                  {res}
-                </option>
-              ))}
-            </Input>
-            {/* <Button onClick={() => set}>Adicionar</Button> */}
+              name="countries"
+              type="textarea"
+              value={countriesSelected}
+              readOnly
+            />
+          </FormGroup>
+          <FormGroup>
+            <Label>Cidades Selecionadas</Label>
+            <Input
+              bsSize="sm"
+              className="mb-3"
+              name="cities"
+              type="textarea"
+              value={citiesSelectd}
+              readOnly
+            />
           </FormGroup>
           <div id="button">
-            <Button type="submit">SUBMIT</Button>
+            <Button 
+            disabled={countriesSelected.length > 0 && citiesSelectd.length > 0 ? false : true}
+            type="submit">Enviar</Button>
           </div>
         </Form>
       </div>
