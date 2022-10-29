@@ -3,7 +3,7 @@ function Navbar(){
     return(
         <>
             <nav className={"navbar"}>
-                <h3>SITE EM CONSTRUÇÃO</h3>
+                <h3>Interface web para marcar Destinos de Interesse.</h3>
             </nav>
         </>
     )

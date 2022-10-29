@@ -1,30 +1,37 @@
 .navbar {
-  background-color: darkcyan;
+  background-color: #5E6BB5;
   min-height: 2rem;
   max-height: 4rem;
   width: 100%;
+  justify-content: center;
+
 }
 
 .form{
-  display: flex;
+  display: inline-table;
   justify-content: center;
-  margin:0 auto;
-  margin-top: 2rem;
+  margin:5rem 15rem 0rem 0rem;
   padding: 3em;
-  background-color: darkcyan;
-  min-width: 18rem;
-  max-width: 35rem;
+  background-color: #5E6BB5;
+  min-width: 20rem;
+  max-width: 25rem;
+  min-height: 20rem;
   border-radius: 10px;
+  padding: 30px;
+  box-shadow: 8px 8px black;
 }
 
 .lists {
-  max-width: 500px;
-  margin: 30px auto;
+  display: inline-table;
+  max-width: 25rem;
   overflow: auto;
-  min-height: 300px;
-  border: 2px solid #444;
+  min-height: 20rem;
+  background-color: #5E6BB5;
   padding: 30px;
   border-radius: 10px;
+  box-shadow: 8px 8px black;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #button{
@@ -47,4 +54,14 @@
 .buttons-container {
   background-color: #444;
   border: none;  
+}
+
+h3{
+  text-align: center;
+}
+
+.content{
+  margin: auto;
+  display:flex;
+  justify-Content:center
 }
